@@ -1,0 +1,104 @@
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+#include <string>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+struct step{
+    int starting_index;
+    int rule_number;
+    string result;
+    string ac;
+    
+    bool operator == (const step &step) const{
+        return starting_index == step.starting_index && rule_number == step.rule_number && result == step.result;
+    }
+};
+
+unordered_map<string, step> visited;
+unordered_map<string, string> rules;
+vector<string> rule_keys;
+
+queue<step> q;
+
+int main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    
+    string k1, k2;
+    for (int i = 0; i < 3; i ++){
+        cin >> k1 >> k2;
+        rules[k1] = k2;
+        rule_keys.emplace_back(k1);
+    }
+    
+    int intendedLen;
+    string begin, end;
+    
+    cin >> intendedLen >> begin >> end;
+    
+    q.push({0, 0, begin});
+    visited[begin] = {0,0,""};
+    
+    step current, val; 
+    
+    step x;
+    
+    vector<step> backtrack;
+    
+    while (q.size() != 0){
+        current = q.front();
+        q.pop();
+        val = current;
+        
+        if (current.result == end){
+            x = current;
+            while (x.result != ""){
+                backtrack.emplace_back(visited[x.result]);
+                x = visited[x.result];
+            }
+            
+            if (backtrack.size() - 1 == intendedLen){
+                break;
+            }else{
+                backtrack = {};
+                
+            }
+        }else{
+            for (int i = 0; i < 3; i ++){
+                for (int j = 0; j < current.result.length(); j ++){
+                    if (val.result.substr(j, j + rule_keys[i].length()) == rule_keys[i]){
+                        val.result.replace(j, j + rule_keys[i].length(), rules[rule_keys[i]]);
+                        if (visited.find(val.result) == visited.end()){
+                            q.push(val);
+                            visited[val.result] = {j+1, i+1, current.result, val.result};
+                        }
+                        val = current;
+                    }
+                }
+            }
+        }
+    }
+    
+ 
+    /*
+    for (long int i = backtrack.size()-2; i >= 0; i --){
+        if (i != 0){
+            cout << backtrack[i].rule_number << " " << backtrack[i].starting_index << " " << backtrack[i-1].result << endl;
+        }else{
+            cout << backtrack[i].rule_number << " " << backtrack[i].starting_index << " " << end << endl;
+
+        }
+    }
+    */
+    
+    for (long int i = backtrack.size()-2; i >= 0; i --){
+        cout << backtrack[i].rule_number << " " << backtrack[i].starting_index << " " << backtrack[i].ac << endl;
+    }
+    
+    return 0;
+    
+}

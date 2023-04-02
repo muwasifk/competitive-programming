@@ -1,0 +1,2 @@
+#include <bits/stdc++.h>
+using namespace std;int main() {int n; cin >> n; int total = 0; vector<int> v; vector<int> u; for (int i = 0; i < n; i ++){int x; cin >> x; v.push_back(x); if(x==1)total ++;} for (int i = 0; i < n; i ++){int x; cin >> x; u.push_back(x); if(x==1)total ++;}total *= 3;int adj=0; for (int i = 0; i < n-1; i ++){if (v[i] == 1 && v[i + 1] == 1){adj ++;}}for (int i = 0; i < n-1; i ++)if (u[i] == 1 && u[i + 1] == 1)adj ++; for (int i = 0; i < n ; i ++)if (i%2 == 0 && v[i] == 1 && u[i] == 1)adj ++;cout << total - 2*adj; }
