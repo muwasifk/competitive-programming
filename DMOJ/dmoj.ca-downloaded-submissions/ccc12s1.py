@@ -1,0 +1,1 @@
+j=int(input());x=j-1;print(int((x*(x-1)*(x-2))/6))
